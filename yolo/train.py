@@ -47,7 +47,8 @@ class Trainer(object):
         if self.params['multi_gpus']:
             self.strategy = tf.distribute.MirroredStrategy(devices=None)
         else:
-            self.strategy = tf.distribute.OneDeviceStrategy(device="/gpu:0")
+            # self.strategy = tf.distribute.OneDeviceStrategy(device="/gpu:0")
+            self.strategy = tf.distribute.OneDeviceStrategy(device="/cpu")
 
         with self.strategy.scope():
             self.model = Yolo(yaml_dir=self.params['yaml_dir'])
@@ -150,7 +151,8 @@ class Trainer(object):
 
 if __name__ == '__main__':
     trainer = Trainer(params)
-    DataReader = DataReader(params['train_annotations_dir'], img_size=params['img_size'], transforms=transforms,
+    print(params['train_annotations_dir'])
+    DataReader = DataReader(params['train_dir'], params['train_annotations_dir'], img_size=params['img_size'], transforms=transforms,
                             mosaic=params['mosaic_data'], augment=params['augment_data'], filter_idx=None)
 
     data_loader = DataLoader(DataReader,

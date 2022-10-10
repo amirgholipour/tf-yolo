@@ -2,7 +2,6 @@
 # coding=utf-8
 # @Author: Longxing Tan, tanlongxing888@163.com
 # Implementations of anchor generator that uses the k-means clustering to generate anchors for new data
-
 import numpy as np
 
 
@@ -48,9 +47,12 @@ class Anchor(object):
         for i, annotation in enumerate(annotations):
             line = annotation.split()
             bboxes = np.array([list(map(float, box.split(','))) for box in line[1:]])
-            assert bboxes.shape[1] == 5, "make sure the labeled objective has xmin,ymin,xmax,ymax,class"
-            bbox_wh = bboxes[:, 2:4] - bboxes[:, 0:2]  # n_box * 2
-            result.append(bbox_wh)
+            assert bboxes.shape[0] == 5, "make sure the labeled objective has xmin,ymin,xmax,ymax,class"
+            # assert bboxes.shape[1] == 5, "make sure the labeled objective has xmin,ymin,xmax,ymax,class" # Org
+            bbox_wh = bboxes[2:4, :] - bboxes[0:2,:]  # n_box * 2
+            # print(bbox_wh)
+            # bbox_wh = bboxes[:, 2:4] - bboxes[:, 0:2]  # n_box * 2 . org
+            result.append(bbox_wh.T)
         result = np.concatenate(result, axis=0)
         return result
 
@@ -82,5 +84,6 @@ class Anchor(object):
 
 if __name__ == '__main__':
     anchor = Anchor()
-    anchors = anchor.generate_anchor(annotations_dir='../data/voc2012/VOCdevkit/VOC2012/train.txt', k=9)
+    print('passed')
+    anchors = anchor.generate_anchor(annotations_dir='/Users/skasmani/GithubRepo/tf-yolo/data/aircraft dataset yolov5.v1i.tensorflow/train/_annotations.txt', k=9)
     print(anchors)

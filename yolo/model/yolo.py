@@ -78,6 +78,7 @@ class Detect(Layer):
         super(Detect, self).__init__()
         self.num_classes = num_classes
         self.num_scale = len(anchors)
+        print(anchors)
         self.output_dims = self.num_classes + 5
         self.num_anchors = len(anchors[0])//2
         self.stride = np.array([8, 16, 32], np.float32)  # fixed here, modify if structure changes
